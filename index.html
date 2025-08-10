@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogos que já joguei</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="jogos-section">
+            <!-- Header com título e controles -->
+            <div class="header-section">
+                <h1 class="section-title">Jogos que já joguei</h1>
+                <div class="header-controls">
+                    <button class="theme-toggle-btn" id="themeToggle" title="Alternar tema">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="add-game-btn" id="addGameBtn">
+                        <i class="fas fa-plus"></i>
+                        Adicionar Jogo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Abas de navegação -->
+            <div class="tabs-container">
+                <button class="tab-btn active" data-tab="all">
+                    <i class="fas fa-gamepad"></i>
+                    Todos os Jogos
+                </button>
+                <button class="tab-btn" data-tab="favorites">
+                    <i class="fas fa-heart"></i>
+                    Favoritos
+                </button>
+                <button class="tab-btn" data-tab="stats">
+                    <i class="fas fa-chart-bar"></i>
+                    Estatísticas
+                </button>
+            </div>
+
+            <!-- Conteúdo das abas -->
+            <div class="tab-content">
+                <!-- Aba: Todos os Jogos -->
+                <div class="tab-pane active" id="all-games">
+                    <!-- Barra de pesquisa -->
+                    <div class="search-container">
+                        <div class="search-box">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="searchInput" class="search-input" placeholder="Buscar jogos...">
+                        </div>
+                    </div>
+
+                    <!-- Filtros de Plataforma -->
+                    <div class="filters-container">
+                        <div class="filter-section">
+                            <h3 class="filter-title">Filtrar por Plataforma</h3>
+                            <div class="platform-filters">
+                                <button class="platform-filter-btn active" data-platform="all">
+                                    <i class="fas fa-th"></i>
+                                    Todas
+                                </button>
+                                <button class="platform-filter-btn" data-platform="PC">
+                                    <i class="fas fa-desktop"></i>
+                                    PC
+                                </button>
+                                <button class="platform-filter-btn" data-platform="PlayStation">
+                                    <i class="fab fa-playstation"></i>
+                                    PlayStation
+                                </button>
+                                <button class="platform-filter-btn" data-platform="Xbox">
+                                    <i class="fab fa-xbox"></i>
+                                    Xbox
+                                </button>
+                                <button class="platform-filter-btn" data-platform="Mobile">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    Mobile
+                                </button>
+                                <button class="platform-filter-btn" data-platform="Nintendo">
+                                    <i class="fas fa-gamepad"></i>
+                                    Nintendo
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Filtros adicionais -->
+                        <div class="additional-filters">
+                            <div class="filter-group">
+                                <label>Status:</label>
+                                <select id="statusFilter" class="filter-select">
+                                    <option value="all">Todos</option>
+                                    <option value="completed">Zerado</option>
+                                    <option value="playing">Em andamento</option>
+                                    <option value="abandoned">Abandonado</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Avaliação:</label>
+                                <select id="ratingFilter" class="filter-select">
+                                    <option value="all">Todas</option>
+                                    <option value="5">5 estrelas</option>
+                                    <option value="4">4+ estrelas</option>
+                                    <option value="3">3+ estrelas</option>
+                                    <option value="2">2+ estrelas</option>
+                                    <option value="1">1+ estrela</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="filter-info">
+                            <span id="filterInfo">Mostrando todos os jogos</span>
+                            <button class="clear-filters-btn" id="clearFiltersBtn" style="display: none;">
+                                <i class="fas fa-times"></i>
+                                Limpar Filtros
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Container dos jogos -->
+                    <div class="games-container" id="gamesContainer"></div>
+                    
+                    <!-- Mensagem de nenhum resultado -->
+                    <div class="no-results" id="noResults" style="display: none;">
+                        <i class="fas fa-search"></i>
+                        <p>Nenhum jogo encontrado para sua busca.</p>
+                    </div>
+                </div>
+
+                <!-- Aba: Favoritos -->
+                <div class="tab-pane" id="favorites">
+                    <div class="favorites-header">
+                        <h2><i class="fas fa-heart"></i> Meus Favoritos</h2>
+                        <p>Jogos que você marcou como favoritos</p>
+                    </div>
+                    <div class="games-container" id="favoritesContainer"></div>
+                    <div class="no-results" id="noFavorites" style="display: none;">
+                        <i class="fas fa-heart-broken"></i>
+                        <p>Você ainda não tem jogos favoritos.</p>
+                        <small>Clique no coração nos jogos para marcá-los como favoritos!</small>
+                    </div>
+                </div>
+
+                <!-- Aba: Estatísticas -->
+                <div class="tab-pane" id="stats">
+                    <div class="stats-header">
+                        <h2><i class="fas fa-chart-bar"></i> Estatísticas dos Jogos</h2>
+                        <div class="stats-controls">
+                            <button class="export-btn" id="exportBtn">
+                                <i class="fas fa-download"></i>
+                                Exportar Dados
+                            </button>
+                            <button class="import-btn" id="importBtn">
+                                <i class="fas fa-upload"></i>
+                                Importar Dados
+                            </button>
+                            <input type="file" id="importFile" accept=".json" style="display: none;">
+                        </div>
+                    </div>
+
+                    <!-- Cards de estatísticas -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalGames">0</h3>
+                                <p>Total de Jogos</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalHours">0</h3>
+                                <p>Horas Totais</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalFavorites">0</h3>
+                                <p>Favoritos</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="avgRating">0.0</h3>
+                                <p>Avaliação Média</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráficos e relatórios -->
+                    <div class="charts-section">
+                        <div class="chart-container">
+                            <h3>Status dos Jogos</h3>
+                            <div class="status-chart" id="statusChart"></div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3>Distribuição por Plataforma</h3>
+                            <div class="platform-chart" id="platformChart"></div>
+                        </div>
+                    </div>
+
+                    <!-- Relatório mensal -->
+                    <div class="monthly-report">
+                        <h3>Relatório Mensal</h3>
+                        <div class="report-cards">
+                            <div class="report-card">
+                                <h4>Este Mês</h4>
+                                <div class="report-stats">
+                                    <div class="report-stat">
+                                        <span class="stat-number" id="thisMonthGames">0</span>
+                                        <span class="stat-label">Jogos</span>
+                                    </div>
+                                    <div class="report-stat">
+                                        <span class="stat-number" id="thisMonthHours">0</span>
+                                        <span class="stat-label">Horas</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="report-card">
+                                <h4>Mês Anterior</h4>
+                                <div class="report-stats">
+                                    <div class="report-stat">
+                                        <span class="stat-number" id="lastMonthGames">0</span>
+                                        <span class="stat-label">Jogos</span>
+                                    </div>
+                                    <div class="report-stat">
+                                        <span class="stat-number" id="lastMonthHours">0</span>
+                                        <span class="stat-label">Horas</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar/editar jogo -->
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Adicionar Novo Jogo</h2>
+                <button class="close-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="gameForm" class="game-form">
+                <div class="form-group">
+                    <label for="gameName">Nome do Jogo:</label>
+                    <input type="text" id="gameName" name="gameName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gameHours">Horas Jogadas:</label>
+                    <input type="number" id="gameHours" name="gameHours" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Status do Jogo:</label>
+                    <div class="status-options">
+                        <label class="status-option">
+                            <input type="radio" name="gameStatus" value="completed" checked>
+                            <span class="status-label completed">
+                                <i class="fas fa-check-circle"></i>
+                                Zerado
+                            </span>
+                        </label>
+                        <label class="status-option">
+                            <input type="radio" name="gameStatus" value="playing">
+                            <span class="status-label playing">
+                                <i class="fas fa-play-circle"></i>
+                                Em andamento
+                            </span>
+                        </label>
+                        <label class="status-option">
+                            <input type="radio" name="gameStatus" value="abandoned">
+                            <span class="status-label abandoned">
+                                <i class="fas fa-pause-circle"></i>
+                                Abandonado
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Avaliação:</label>
+                    <div class="rating-container">
+                        <div class="stars" id="ratingStars">
+                            <i class="far fa-star" data-rating="1"></i>
+                            <i class="far fa-star" data-rating="2"></i>
+                            <i class="far fa-star" data-rating="3"></i>
+                            <i class="far fa-star" data-rating="4"></i>
+                            <i class="far fa-star" data-rating="5"></i>
+                        </div>
+                        <span class="rating-text">Clique nas estrelas para avaliar</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Imagem do Jogo:</label>
+                    <div class="image-options">
+                        <div class="image-option">
+                            <input type="radio" id="imageUrl" name="imageType" value="url" checked>
+                            <label for="imageUrl" class="option-label">
+                                <i class="fas fa-link"></i>
+                                <span>Usar URL</span>
+                            </label>
+                        </div>
+                        <div class="image-option">
+                            <input type="radio" id="imageUpload" name="imageType" value="upload">
+                            <label for="imageUpload" class="option-label">
+                                <i class="fas fa-upload"></i>
+                                <span>Fazer Upload</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="urlInput" class="image-input">
+                        <input type="url" id="gameImage" name="gameImage" placeholder="https://exemplo.com/imagem.jpg">
+                        <small>Cole aqui o link da imagem</small>
+                    </div>
+                    <div id="uploadInput" class="image-input" style="display: none;">
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Clique aqui ou arraste uma imagem</p>
+                            <small>Formatos: JPG, PNG, GIF (máx. 5MB)</small>
+                        </div>
+                        <input type="file" id="imageFile" name="imageFile" accept="image/*" style="display: none;">
+                        <div id="imagePreview" class="image-preview" style="display: none;">
+                            <img id="previewImg" src="" alt="Preview">
+                            <button type="button" id="removeImage" class="remove-image-btn">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Plataformas:</label>
+                    <div class="platforms-checkboxes">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="platforms" value="PC">
+                            <span class="checkmark">PC</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="platforms" value="PlayStation">
+                            <span class="checkmark">PlayStation</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="platforms" value="Xbox">
+                            <span class="checkmark">Xbox</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="platforms" value="Mobile">
+                            <span class="checkmark">Mobile</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="platforms" value="Nintendo">
+                            <span class="checkmark">Nintendo</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar Jogo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de confirmação para deletar -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content delete-modal">
+            <div class="modal-header">
+                <h2>Confirmar Exclusão</h2>
+                <button class="close-btn" id="closeDeleteModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir o jogo:</p>
+                <p><strong id="deleteGameName"></strong></p>
+                <p>Esta ação não pode ser desfeita.</p>
+            </div>
+            <div class="form-actions">
+                <button class="btn-secondary" id="cancelDeleteBtn">Cancelar</button>
+                <button class="btn-danger" id="confirmDeleteBtn">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
